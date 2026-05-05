@@ -7,7 +7,7 @@ from yaml.loader import SafeLoader
 # =====================
 # 認証設定の読み込み
 # =====================
-config = yaml.safe_load(st.secrets)
+config = st.secrets  # ← これだけでOK
 
 authenticator = stauth.Authenticate(
     config['credentials'],
