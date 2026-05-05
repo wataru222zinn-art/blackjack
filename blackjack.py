@@ -7,8 +7,14 @@ from yaml.loader import SafeLoader
 # =====================
 # 認証設定の読み込み
 # =====================
-# Secrets を「通常の dict」に変換してコピー
-config = dict(st.secrets)
+def to_dict(obj):
+    if isinstance(obj, dict):
+        return {k: to_dict(v) for k, v in obj.items()}
+    else:
+        return obj
+
+# Secrets を深い階層まで dict 化
+config = to_dict(st.secrets)
 
 authenticator = stauth.Authenticate(
     config['credentials'],
@@ -16,7 +22,6 @@ authenticator = stauth.Authenticate(
     config['cookie']['key'],
     config['cookie']['expiry_days']
 )
-
 st.title("ブラックジャックアプリ")
 
 # -------------------------
