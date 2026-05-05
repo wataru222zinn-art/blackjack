@@ -3,18 +3,18 @@ import bj
 import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
+from collections.abc import Mapping
 
 # =====================
 # 認証設定の読み込み
 # =====================
-def to_dict(obj):
-    if isinstance(obj, dict):
-        return {k: to_dict(v) for k, v in obj.items()}
+def deep_convert(obj):
+    if isinstance(obj, Mapping):
+        return {k: deep_convert(v) for k, v in obj.items()}
     else:
         return obj
 
-# Secrets を深い階層まで dict 化
-config = to_dict(st.secrets)
+config = deep_convert(st.secrets)
 
 authenticator = stauth.Authenticate(
     config['credentials'],
